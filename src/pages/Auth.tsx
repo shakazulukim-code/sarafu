@@ -23,15 +23,17 @@ export default function Auth() {
   const [searchParams] = useSearchParams();
   const { user, signIn, signUp, loading } = useAuth();
   const { settings } = useSiteSettings();
-  
+
   // Capture referral code from URL
   useReferral();
-  
+
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'signin');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -128,6 +130,27 @@ export default function Auth() {
     }
   };
 
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/auth?tab=reset`,
+      });
+      if (error) {
+        setError(error.message);
+      } else {
+        setSuccess('Password reset link sent! Please check your email.');
+        setShowResetPassword(false);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -143,7 +166,7 @@ export default function Auth() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/30 rounded-full blur-3xl" />
-        
+
         <div className="relative z-10 flex flex-col justify-center p-12">
           <Link to="/" className="flex items-center gap-3 mb-12">
             {settings.logo_url ? (
@@ -155,7 +178,7 @@ export default function Auth() {
             )}
             <span className="text-2xl font-bold font-display gradient-text">{settings.site_name}</span>
           </Link>
-          
+
           <h1 className="text-4xl font-bold font-display mb-4">
             Trade Crypto with<br />
             <span className="gradient-text">M-PESA</span>
@@ -260,6 +283,17 @@ export default function Auth() {
                     </div>
                   </div>
 
+                  <div className="flex items-center justify-between">
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="px-0 text-xs text-primary"
+                      onClick={() => setShowResetPassword(true)}
+                    >
+                      Forgot password?
+                    </Button>
+                  </div>
+
                   <Button type="submit" variant="hero" className="w-full" disabled={isSubmitting}>
                     {isSubmitting ? (
                       <>
@@ -273,6 +307,61 @@ export default function Auth() {
                 </form>
               </div>
             </TabsContent>
+
+            {/* Forgot Password View Overlay */}
+            {showResetPassword && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="absolute inset-0 z-20 bg-background flex flex-col items-center justify-center p-6 space-y-6"
+              >
+                <div className="space-y-2 text-center">
+                  <h2 className="text-2xl font-bold font-display">Reset Password</h2>
+                  <p className="text-muted-foreground text-sm">
+                    Enter your email to receive a password reset link
+                  </p>
+                </div>
+
+                <form onSubmit={handleResetPassword} className="w-full space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="reset-email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="reset-email"
+                        type="email"
+                        placeholder="you@example.com"
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <Button type="submit" variant="hero" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Sending link...
+                      </>
+                    ) : (
+                      'Send Reset Link'
+                    )}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full"
+                    onClick={() => setShowResetPassword(false)}
+                    disabled={isSubmitting}
+                  >
+                    Back to Sign In
+                  </Button>
+                </form>
+              </motion.div>
+            )}
 
             <TabsContent value="signup">
               <div className="space-y-6">

@@ -3,6 +3,7 @@ import { TrendingUp, Users, DollarSign, Droplet, Flame, ArrowRight } from 'lucid
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 
 interface CoinCardProps {
   coin: {
@@ -54,22 +55,21 @@ export function CoinCard({ coin, index = 0 }: CoinCardProps) {
     >
       {/* Hover gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:to-accent/5 transition-all duration-500" />
-      
+
       <div className="relative z-10">
         {/* Header with logo and badges */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            {coin.logo_url ? (
-              <img
-                src={coin.logo_url}
-                alt={coin.name}
-                className="h-12 w-12 rounded-xl object-cover ring-2 ring-border group-hover:ring-primary/50 transition-all"
-              />
-            ) : (
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center ring-2 ring-border group-hover:ring-primary/50 transition-all">
-                <span className="text-lg font-bold text-primary">{coin.symbol.charAt(0)}</span>
-              </div>
-            )}
+            <OptimizedImage
+              src={coin.logo_url || undefined}
+              alt={coin.name}
+              containerClassName="h-12 w-12 rounded-xl ring-2 ring-border group-hover:ring-primary/50 transition-all"
+              fallback={
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center ring-2 ring-border group-hover:ring-primary/50 transition-all">
+                  <span className="text-lg font-bold text-primary">{coin.symbol.charAt(0)}</span>
+                </div>
+              }
+            />
             <div>
               <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
                 {coin.symbol}
@@ -125,8 +125,8 @@ export function CoinCard({ coin, index = 0 }: CoinCardProps) {
             <p className="text-lg font-bold text-primary">{formatKesPrice(coin.price)}</p>
           </div>
           <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-            <Button 
-              variant="success" 
+            <Button
+              variant="success"
               size="sm"
               disabled={coin.trading_paused}
               onClick={handleBuyClick}
@@ -135,8 +135,8 @@ export function CoinCard({ coin, index = 0 }: CoinCardProps) {
               Buy
               <ArrowRight className="h-3 w-3 group-hover/btn:translate-x-0.5 transition-transform" />
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               disabled={coin.trading_paused}
               onClick={() => navigate(`/coin/${coin.id}?action=sell`)}

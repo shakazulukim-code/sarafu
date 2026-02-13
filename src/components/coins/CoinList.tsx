@@ -4,6 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Flame, Sparkles, Star, Loader2 } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { CoinGridSkeleton } from '@/components/ui/SkeletonLoader';
 import { useEffect } from 'react';
 
 type FilterTab = 'trending' | 'latest' | 'featured';
@@ -79,9 +80,7 @@ export function CoinList() {
 
         <TabsContent value={activeTab} className="mt-6">
           {isLoading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
+            <CoinGridSkeleton count={6} />
           ) : coins && coins.length > 0 ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {coins.map((coin, index) => (

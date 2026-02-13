@@ -25,6 +25,7 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const About = lazy(() => import("./pages/About"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ErrorPage = lazy(() => import("./pages/Error"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -58,6 +59,7 @@ const App = () => (
                     <Route path="/privacy" element={<Privacy />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/error" element={<ErrorPage />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
 
                     {/* Protected Routes - User */}
                     <Route

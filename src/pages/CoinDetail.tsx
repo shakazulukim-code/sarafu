@@ -16,6 +16,7 @@ import { MpesaPaymentModal } from '@/components/trading/MpesaPaymentModal';
 import { CoinContractInfo } from '@/components/coins/CoinContractInfo';
 import { CoinMetrics } from '@/components/coins/CoinMetrics';
 import { CoinPriceTrend } from '@/components/coins/CoinPriceTrend';
+import { CoinDetailSkeleton } from '@/components/ui/SkeletonLoader';
 import { ArrowLeft, Loader2, AlertCircle, ArrowDown, TrendingUp } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
@@ -366,13 +367,13 @@ export default function CoinDetail() {
     // Subscribe to real-time transaction updates
     const channel = supabase
       .channel(`transaction-${transactionId}`)
-      .on('postgres_changes', 
+      .on('postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'transactions', filter: `id=eq.${transactionId}` },
         (payload: any) => {
           const txStatus = payload.new.status;
           const errorMsg = payload.new.error_reason;
           console.log('🔄 Real-time update received:', { status: txStatus, error: errorMsg });
-          
+
           if (txStatus === 'completed') {
             console.log('✅ Payment completed via real-time!');
             setPaymentStatus('success');
@@ -434,7 +435,7 @@ export default function CoinDetail() {
 
         // Query M-PESA status via our Supabase function
         console.log(`⏱️ Poll ${attempts}/45: Querying M-PESA status for ${checkoutRequestId.substring(0, 8)}...`);
-        
+
         const { data: result, error: funcError } = await supabase.functions.invoke('query-mpesa-status', {
           body: { transactionId, checkoutRequestId },
         });
@@ -508,14 +509,7 @@ export default function CoinDetail() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="flex items-center justify-center pt-32">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </div>
-    );
+    return <CoinDetailSkeleton />;
   }
 
   if (!coin) return null;

@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  Star, 
-  TrendingUp, 
-  FileText, 
-  ExternalLink, 
+import {
+  Star,
+  TrendingUp,
+  FileText,
+  ExternalLink,
   Copy,
   Check,
   Globe,
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 
 interface CoinInfoProps {
   coin: {
@@ -60,13 +61,16 @@ export function CoinInfo({ coin }: CoinInfoProps) {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-start gap-4">
-        <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0 overflow-hidden">
-          {coin.logo_url ? (
-            <img src={coin.logo_url} alt={coin.name} className="h-full w-full object-cover" />
-          ) : (
-            <span className="text-2xl font-bold gradient-text">{coin.symbol[0]}</span>
-          )}
-        </div>
+        <OptimizedImage
+          src={coin.logo_url || undefined}
+          alt={coin.name}
+          containerClassName="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex-shrink-0"
+          fallback={
+            <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+              <span className="text-2xl font-bold gradient-text">{coin.symbol[0]}</span>
+            </div>
+          }
+        />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-2xl font-bold font-display">{coin.name}</h1>
