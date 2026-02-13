@@ -227,7 +227,7 @@ export default function Auth() {
             </motion.div>
           )}
 
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="relative">
             <TabsList className="grid w-full grid-cols-2 mb-6 sm:mb-8">
               <TabsTrigger value="signin">Sign In</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
