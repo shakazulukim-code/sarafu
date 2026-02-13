@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api/|_next/|static/|assets/|[\\w-]+\\.\\w+).*)",
-      "destination": "/"
+      "source": "/[^.]*",
+      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -76,6 +76,5 @@
       ]
     }
   ],
-  "trailingSlash": false,
-  "cleanUrls": true
+  "trailingSlash": false
 }
