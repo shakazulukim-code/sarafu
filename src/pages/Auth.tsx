@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Rocket, Loader2, Mail, Lock, AlertCircle, Gift } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
+import { getBaseUrl } from '@/lib/site-settings-context';
 
 const authSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -137,15 +138,17 @@ export default function Auth() {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${window.location.origin}/auth?tab=reset`,
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${getBaseUrl()}/reset-password`,
       });
-      if (error) {
-        setError(error.message);
+      if (resetError) {
+        setError(resetError.message);
       } else {
         setSuccess('Password reset link sent! Please check your email.');
         setShowResetPassword(false);
       }
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }

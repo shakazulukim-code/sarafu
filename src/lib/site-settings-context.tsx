@@ -141,10 +141,19 @@ export function useSiteSettings() {
 
 // Helper to get base URL dynamically
 export function getBaseUrl(): string {
+  // Respect user-defined environment variable if present
+  const envUrl = import.meta.env.VITE_SITE_URL;
+  if (envUrl) return envUrl.replace(/\/$/, '');
+
   if (typeof window !== 'undefined') {
+    // Check if we are on localhost
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    // If we're on localhost but want to hardcode production for links, we could, 
+    // but usually we want localhost during development.
     return window.location.origin;
   }
-  return '';
+  return 'https://noblecoinlaunch.com'; // Production fallback
 }
 
 // Helper to get referral URL
