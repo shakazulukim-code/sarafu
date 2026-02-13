@@ -29,6 +29,10 @@ export interface SiteSettings {
   admin_commission: number;
   coin_creation_fee: number;
   referral_commission_percentage: number;
+  google_verification_code: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  contact_address: string | null;
 }
 
 const defaultSettings: SiteSettings = {
@@ -59,6 +63,10 @@ const defaultSettings: SiteSettings = {
   admin_commission: 2.5,
   coin_creation_fee: 5000,
   referral_commission_percentage: 5,
+  google_verification_code: null,
+  contact_email: null,
+  contact_phone: null,
+  contact_address: null,
 };
 
 interface SiteSettingsContextType {
@@ -70,7 +78,7 @@ interface SiteSettingsContextType {
 const SiteSettingsContext = createContext<SiteSettingsContextType>({
   settings: defaultSettings,
   loading: true,
-  refetch: async () => {},
+  refetch: async () => { },
 });
 
 export function SiteSettingsProvider({ children }: { children: ReactNode }) {
@@ -89,16 +97,16 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
           ...defaultSettings,
           ...data,
         });
-        
+
         // Update document title
         document.title = data.site_name || defaultSettings.site_name;
-        
+
         // Update meta description
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc && data.site_description) {
           metaDesc.setAttribute('content', data.site_description);
         }
-        
+
         // Update OG tags
         const ogTitle = document.querySelector('meta[property="og:title"]');
         if (ogTitle) {

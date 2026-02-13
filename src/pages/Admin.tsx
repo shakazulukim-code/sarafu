@@ -5,7 +5,7 @@ import { Footer } from '@/components/layout/Footer';
 import { useAuth } from '@/lib/auth-context';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  Shield, Coins, Users, Settings, CreditCard, DollarSign, Layout, ArrowUpRight, TrendingUp
+  Shield, Coins, Users, Settings, CreditCard, DollarSign, Layout, ArrowUpRight, TrendingUp, Search, Briefcase
 } from 'lucide-react';
 import { MpesaSettings } from '@/components/admin/MpesaSettings';
 import { PlatformSettings } from '@/components/admin/PlatformSettings';
@@ -15,6 +15,9 @@ import { CommissionDashboard } from '@/components/admin/CommissionDashboard';
 import { LandingPageSettings } from '@/components/admin/LandingPageSettings';
 import { WithdrawalManagement } from '@/components/admin/WithdrawalManagement';
 import { CoinPriceManagement } from '@/components/admin/CoinPriceManagement';
+import { EnhancedCoinDataManagement } from '@/components/admin/EnhancedCoinDataManagement';
+import { SEOManagement } from '@/components/admin/SEOManagement';
+import { JobManagement } from '@/components/admin/JobManagement';
 import { Navigate } from 'react-router-dom';
 
 export default function Admin() {
@@ -70,6 +73,14 @@ export default function Admin() {
               <CreditCard className="h-3.5 w-3.5" />
               M-PESA
             </TabsTrigger>
+            <TabsTrigger value="seo" className="gap-1.5 text-xs sm:text-sm">
+              <Search className="h-3.5 w-3.5" />
+              SEO
+            </TabsTrigger>
+            <TabsTrigger value="jobs" className="gap-1.5 text-xs sm:text-sm">
+              <Briefcase className="h-3.5 w-3.5" />
+              Jobs
+            </TabsTrigger>
             <TabsTrigger value="landing" className="gap-1.5 text-xs sm:text-sm">
               <Layout className="h-3.5 w-3.5" />
               Landing
@@ -84,7 +95,7 @@ export default function Admin() {
             <CoinManagement userId={user.id} isSuperAdmin={true} />
           </TabsContent>
           <TabsContent value="prices">
-            <CoinPriceManagement userId={user.id} />
+            <EnhancedCoinDataManagement userId={user.id} />
           </TabsContent>
           <TabsContent value="users">
             <UserManagement currentUserId={user.id} isSuperAdmin={true} />
@@ -97,6 +108,12 @@ export default function Admin() {
           </TabsContent>
           <TabsContent value="mpesa">
             <MpesaSettings />
+          </TabsContent>
+          <TabsContent value="seo">
+            <SEOManagement />
+          </TabsContent>
+          <TabsContent value="jobs">
+            <JobManagement />
           </TabsContent>
           <TabsContent value="landing">
             <LandingPageSettings />

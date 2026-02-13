@@ -8,6 +8,7 @@ import { Rocket, Shield, Zap, TrendingUp, ArrowRight, Coins, Users, Flame, Arrow
 import { supabase } from '@/integrations/supabase/client';
 import { SimulatedChart } from '@/components/landing/SimulatedChart';
 import { SimulatedOrderBook } from '@/components/landing/SimulatedOrderBook';
+import { JobSection } from '@/components/home/JobSection';
 
 interface SiteSettings {
   site_name: string;
@@ -134,14 +135,14 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         {/* Background effects */}
         <div className="absolute inset-0 bg-hero-pattern" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        
+
         <div className="container relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -158,11 +159,11 @@ export default function Landing() {
               <Flame className="h-4 w-4 text-primary animate-pulse" />
               <span className="text-sm text-primary font-medium">{settings.hero_badge}</span>
             </motion.div>
-            
+
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold font-display mb-6 leading-tight">
               {renderHeroTitle()}
             </h1>
-            
+
             <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               {settings.hero_subtitle}
             </p>
@@ -431,6 +432,9 @@ export default function Landing() {
           </motion.div>
         </div>
       </section>
+
+      {/* Job Board Section */}
+      <JobSection />
 
       {/* CTA Section */}
       <section className="py-20 border-t border-border/50">

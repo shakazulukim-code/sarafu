@@ -7,18 +7,20 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
-import { 
-  Settings, 
-  Loader2, 
-  Save, 
-  Globe, 
+import {
+  Loader2,
+  Save,
+  Globe,
   CreditCard,
   Percent,
   Image as ImageIcon,
   DollarSign,
   AlertTriangle,
   Coins,
-  Gift
+  Gift,
+  Mail,
+  Phone,
+  MapPin
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -34,6 +36,9 @@ interface SiteSettings {
   admin_commission: number;
   coin_creation_fee: number;
   referral_commission_percentage: number;
+  contact_email: string | null;
+  contact_phone: string | null;
+  contact_address: string | null;
 }
 
 export function PlatformSettings() {
@@ -54,9 +59,9 @@ export function PlatformSettings() {
         .maybeSingle();
 
       if (error) throw error;
-      
+
       if (data) {
-        setSettings(data as SiteSettings);
+        setSettings(data as unknown as SiteSettings);
       } else {
         // Create default settings if none exist
         const { data: newSettings, error: createError } = await supabase
@@ -76,7 +81,7 @@ export function PlatformSettings() {
           .single();
 
         if (createError) throw createError;
-        setSettings(newSettings as SiteSettings);
+        setSettings(newSettings as unknown as SiteSettings);
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -88,7 +93,7 @@ export function PlatformSettings() {
 
   const handleSave = async () => {
     if (!settings) return;
-    
+
     setSaving(true);
     try {
       const { error } = await supabase
@@ -104,6 +109,9 @@ export function PlatformSettings() {
           admin_commission: settings.admin_commission,
           coin_creation_fee: settings.coin_creation_fee,
           referral_commission_percentage: settings.referral_commission_percentage,
+          contact_email: settings.contact_email,
+          contact_phone: settings.contact_phone,
+          contact_address: settings.contact_address,
         })
         .eq('id', settings.id);
 
@@ -248,6 +256,57 @@ export function PlatformSettings() {
                 <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 2MB</p>
               </div>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Contact Information */}
+      <Card className="glass-card">
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Mail className="h-5 w-5 text-primary" />
+            Contact Information
+          </CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Manage how users can reach you</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4 p-4 sm:p-6 pt-0 sm:pt-0">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label className="text-sm flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                Contact Email
+              </Label>
+              <Input
+                type="email"
+                value={settings.contact_email || ''}
+                onChange={(e) => setSettings({ ...settings, contact_email: e.target.value })}
+                placeholder="support@example.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm flex items-center gap-2">
+                <Phone className="h-4 w-4" />
+                Contact Phone
+              </Label>
+              <Input
+                type="tel"
+                value={settings.contact_phone || ''}
+                onChange={(e) => setSettings({ ...settings, contact_phone: e.target.value })}
+                placeholder="+254 700 000000"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm flex items-center gap-2">
+              <MapPin className="h-4 w-4" />
+              Physical Address
+            </Label>
+            <Textarea
+              value={settings.contact_address || ''}
+              onChange={(e) => setSettings({ ...settings, contact_address: e.target.value })}
+              placeholder="Nairobi, Kenya..."
+              rows={2}
+            />
           </div>
         </CardContent>
       </Card>

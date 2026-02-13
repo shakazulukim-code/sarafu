@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import App from "./App.tsx";
 import { SiteLoader } from "./components/SiteLoader.tsx";
 import "./index.css";
+import { HelmetProvider } from 'react-helmet-async';
 
 function Root() {
   const [showLoader, setShowLoader] = useState(true);
@@ -16,10 +17,10 @@ function Root() {
   }, []);
 
   return (
-    <>
+    <HelmetProvider>
       {showLoader && <SiteLoader />}
       <App />
-    </>
+    </HelmetProvider>
   );
 }
 
